@@ -31,13 +31,14 @@ public class CharacterController : MonoBehaviour
                 currentInteractable.Show();
             }
         }
-        if( collision.gameObject.CompareTag("Ladder"))
+        if (collision.gameObject.CompareTag("Ladder"))
         {
             rb.linearVelocity = Vector2.zero; // Stop the character when entering a ladder
             rb.gravityScale = 0; // Disable gravity while on the ladder
             jumping = false; // Reset jumping state when on a ladder
             dashed = false; // Reset dashed state when on a ladder
             onLadder = true; // Set onLadder to true when entering a ladder
+            print("Entered ladder: " + collision.gameObject.name);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -52,6 +53,7 @@ public class CharacterController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Ladder"))
         {
+            print("Exited ladder: " + collision.gameObject.name);
             rb.gravityScale = 1; // Re-enable gravity when exiting the ladder
             onLadder = false; // Set onLadder to false when exiting a ladder
         }
@@ -71,7 +73,7 @@ public class CharacterController : MonoBehaviour
         if (movement != Vector2.zero)
         {
             // Move the character based on the input
-            moveDirection = new Vector3(movement.x * speed, 0, 0);
+            moveDirection = new Vector3(movement.x * speed, movement.y, 0);
             if (movement.x > 0)
             {
                 lastMoveIndicator = 1; // Right
@@ -95,10 +97,13 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            // Reset jumping state when colliding with the ground
-            jumping = false;
-            dashed = false; // Reset dashed state when touching the ground
-            FindHorizontalVelocity();
+            LandOnGround();
+        }
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            // Attach to the moving platform
+            transform.SetParent(collision.transform);
+            LandOnGround();
         }
         if (collision.gameObject.CompareTag("Lava"))
         {
@@ -108,6 +113,23 @@ public class CharacterController : MonoBehaviour
             transform.position = spawnPoint.transform.position; // Reset position to spawn point
         }
     }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            // Detach from the moving platform
+            transform.SetParent(null);
+        }
+    }
+
+    private void LandOnGround()
+    {
+        // Reset jumping state when colliding with the ground
+        jumping = false;
+        dashed = false; // Reset dashed state when touching the ground
+        FindHorizontalVelocity();
+    }
+
     public void OnJump()
     {
         if(jumping && dashed)
@@ -128,6 +150,8 @@ public class CharacterController : MonoBehaviour
         if (rb != null)
         {
             FindHorizontalVelocity();
+            if (onLadder)
+                LadderControl();
         }
         else
         {
@@ -135,7 +159,14 @@ public class CharacterController : MonoBehaviour
         }
 
     }
-
+    private void LadderControl()
+    {
+        if (moveDirection.y != 0)
+        {
+            //use translations for ladder movement
+            transform.Translate(new Vector3(0, moveDirection.y * speed * Time.deltaTime, 0));
+        }
+    }
     private void FindHorizontalVelocity()
     {
         if (moveDirection.x ==0 && !jumping)

@@ -9,6 +9,7 @@ TagManager:
   - Spawn
   - Interactable
   - Ladder
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
