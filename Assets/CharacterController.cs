@@ -10,7 +10,9 @@ public class CharacterController : MonoBehaviour
     public bool dashed = false;
     public bool onLadder = false; // Added for ladder functionality
     int lastMoveIndicator = 0;
+    public GameObject spawnPoint;
     Rigidbody2D rb;
+    private Interactable currentInteractable;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,14 +21,58 @@ public class CharacterController : MonoBehaviour
             Debug.LogError("Rigidbody2D component not found on the character.");
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Interactable"))
+        {
+            currentInteractable = collision.GetComponent<Interactable>();
+            if (currentInteractable != null)
+            {
+                currentInteractable.Show();
+            }
+        }
+        if( collision.gameObject.CompareTag("Ladder"))
+        {
+            rb.linearVelocity = Vector2.zero; // Stop the character when entering a ladder
+            rb.gravityScale = 0; // Disable gravity while on the ladder
+            jumping = false; // Reset jumping state when on a ladder
+            dashed = false; // Reset dashed state when on a ladder
+            onLadder = true; // Set onLadder to true when entering a ladder
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Interactable"))
+        {
+            if (currentInteractable != null)
+            {
+                currentInteractable.Hide();
+                currentInteractable = null; // Clear the reference when exiting
+            }
+        }
+        if (collision.gameObject.CompareTag("Ladder"))
+        {
+            rb.gravityScale = 1; // Re-enable gravity when exiting the ladder
+            onLadder = false; // Set onLadder to false when exiting a ladder
+        }
+    }
+    public void OnInteract()
+    {
+        if (currentInteractable != null)
+        {
+            currentInteractable.Interact();
+            currentInteractable.Hide();
+            currentInteractable = null; // Clear the reference after interaction
+        }
+    }
     public void OnMove(InputValue value)
     {
         var movement = value.Get<Vector2>();
         if (movement != Vector2.zero)
         {
             // Move the character based on the input
-            moveDirection = new Vector3(movement.x *speed, 0, 0);
-            if(movement.x > 0)
+            moveDirection = new Vector3(movement.x * speed, 0, 0);
+            if (movement.x > 0)
             {
                 lastMoveIndicator = 1; // Right
             }
@@ -53,6 +99,13 @@ public class CharacterController : MonoBehaviour
             jumping = false;
             dashed = false; // Reset dashed state when touching the ground
             FindHorizontalVelocity();
+        }
+        if (collision.gameObject.CompareTag("Lava"))
+        {
+            // Reset jumping state when colliding with the ground
+            jumping = false;
+            dashed = false; // Reset dashed state when touching the ground
+            transform.position = spawnPoint.transform.position; // Reset position to spawn point
         }
     }
     public void OnJump()

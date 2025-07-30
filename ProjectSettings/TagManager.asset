@@ -7,14 +7,16 @@ TagManager:
   - Ground
   - Lava
   - Spawn
+  - Interactable
+  - Ladder
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ladder
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
