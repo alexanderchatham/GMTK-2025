@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 8595380794942277355}
   - component: {fileID: 767398282097575926}
   - component: {fileID: 5024124601775442038}
-  - component: {fileID: 7852924636924010311}
   m_Layer: 0
   m_Name: Moving Platform
   m_TagString: MovingPlatform
@@ -199,22 +198,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7852924636924010311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5802535489459541237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9897938c1aa34abcb607105b9c37d57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 8811875601192552375}
-  - {fileID: 8690632923704941058}
-  speed: 0.2
 --- !u!1 &5856039629285664631
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +207,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7102885283882832690}
+  - component: {fileID: 19415947685612564}
   m_Layer: 0
   m_Name: Moving Platform Objects
   m_TagString: Untagged
@@ -248,6 +232,24 @@ Transform:
   - {fileID: 8595380794942277355}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &19415947685612564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856039629285664631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9897938c1aa34abcb607105b9c37d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 8811875601192552375}
+  - {fileID: 8690632923704941058}
+  movingPlatform: {fileID: 8595380794942277355}
+  inverse: 0
+  speed: 0.2
 --- !u!1 &5970676892044027802
 GameObject:
   m_ObjectHideFlags: 0

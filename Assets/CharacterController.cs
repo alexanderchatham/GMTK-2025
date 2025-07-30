@@ -113,6 +113,14 @@ public class CharacterController : MonoBehaviour
             transform.position = spawnPoint.transform.position; // Reset position to spawn point
         }
     }
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            jumping = false; // Reset jumping state when colliding with the ground
+            dashed = false; // Reset dashed state when touching the ground
+        }
+    }
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("MovingPlatform"))
