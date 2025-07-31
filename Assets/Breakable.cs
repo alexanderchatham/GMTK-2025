@@ -95,7 +95,7 @@ public class Breakable : MonoBehaviour
         yield return new WaitForSeconds(1f); // Cooldown duration before allowing another knockback
         KnockedBack = false; // Reset the knocked back flag
     }
-    public float a, b, c;
+    public float a, b;
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
@@ -104,12 +104,6 @@ public class Breakable : MonoBehaviour
         {
             Gizmos.color = Color.red;
             DrawTrajectory(transform.position, transform.position+Vector3.left, explodeDistance, explodeTime, true);
-        }
-
-        if (enemy)
-        {
-            Gizmos.color = Color.yellow;
-            DrawTrajectory(transform.position, transform.position + Vector3.left, explodeDistance/3, explodeTime, false);
         }
     }
 
@@ -130,10 +124,6 @@ public class Breakable : MonoBehaviour
             if (isBreakaway)
             {
                 gravityEffect += new Vector3(0, Physics2D.gravity.y) * segmentDuration;
-            }
-            else
-            {
-                gravityEffect += new Vector3(0, a - t * b) * segmentDuration;
             }
 
             Vector3 point = Vector3.Lerp(start, end + gravityEffect, t);
