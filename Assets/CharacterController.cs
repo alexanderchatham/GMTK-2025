@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour
     public float speed = 5f;
     public float jumpForce = 5f;
     public float MaxSpeed = 1f;
+    public float ladderStickiness = 0.5f; // Adjust this value to control how sticky the character is to the ladder
     public Vector3 moveDirection;
     public bool jumping = false;
     public bool dashed = false;
@@ -39,9 +40,9 @@ public class CharacterController : MonoBehaviour
         //Instead of translate use rb to apply movement
         if (rb != null)
         {
-            FindHorizontalVelocity();
             if (onLadder)
                 LadderControl();
+            FindHorizontalVelocity();
         }
         else
         {
@@ -254,6 +255,10 @@ public class CharacterController : MonoBehaviour
     }
     private void LadderControl()
     {
+        if(moveDirection.x < ladderStickiness && moveDirection.x > -ladderStickiness)
+        {
+            moveDirection.x = 0; // Stop horizontal movement on the ladder
+        }
         if (moveDirection.y != 0)
         {
             //use translations for ladder movement

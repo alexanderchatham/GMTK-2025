@@ -183,6 +183,7 @@ MonoBehaviour:
   speed: 5
   jumpForce: 5
   MaxSpeed: 5
+  ladderStickiness: 0.5
   moveDirection: {x: 0, y: 0, z: 0}
   jumping: 0
   dashed: 0
@@ -192,6 +193,7 @@ MonoBehaviour:
   dashIndicator: {fileID: 2394752426537709985}
   currentLadders: []
   spawnPoint: {fileID: 0}
+  sword: {fileID: 0}
 --- !u!114 &7519364561833157519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,7 +731,7 @@ GameObject:
   - component: {fileID: 3531472581581141147}
   - component: {fileID: 1438673237506775541}
   - component: {fileID: 6956669432672933875}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}

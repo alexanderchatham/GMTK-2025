@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,17 +8,22 @@ public class Breakable : MonoBehaviour
     public float explodeDistance;
     public float explodeTime;
     public UnityEvent BreakEvent;
+    public bool enemy = false;
+    public bool breakable = true; // Flag to check if the object is breakable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!breakable) return; // If the object is not breakable, do nothing
         // Check if the object colliding with this has the tag "Player"
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Sword"))
         {
             Destroy(GetComponent<Rigidbody2D>()); // Set the Rigidbody to kinematic to prevent further physics interactions
             Destroy(GetComponent<Collider2D>()); // Destroy the collider to prevent further collisions
             StartCoroutine(BreakAway(collision.transform.position));
         }
-    }
+    } 
+    
+
     IEnumerator BreakAway(Vector3 explosionPosition)
     {
         // Use a coroutine to handle the breakaway effect with a float timer a while loop and lerping the breakable away while adjusting its alpha
@@ -43,6 +49,6 @@ public class Breakable : MonoBehaviour
             spriteRenderer.color = newColor;
             yield return null; // Wait for the next frame
         }
-
+        Destroy(gameObject); // Destroy the breakable object after the effect is complete
     }
 }
