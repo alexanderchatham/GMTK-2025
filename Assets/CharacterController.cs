@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
@@ -16,11 +17,13 @@ public class CharacterController : MonoBehaviour
     public bool onLadder = false; // Added for ladder functionality
     Coroutine dashCoroutine;
     public Transform PlayerRenderer;
+    public Image dashIndicator; // Assuming you have a UI Image for dash indicator
     public List<GameObject> currentLadders = new List<GameObject>();
     int lastMoveIndicator = 0;
     public GameObject spawnPoint;
     Rigidbody2D rb;
     private Interactable currentInteractable;
+    public GameObject sword;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -64,6 +67,7 @@ public class CharacterController : MonoBehaviour
             jumping = false; // Reset jumping state when on a ladder
             dashed = false; // Reset dashed state when on a ladder
             onLadder = true; // Set onLadder to true when entering a ladder
+            dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
             print("Entered ladder: " + collision.gameObject.name);
             if(!currentLadders.Contains(collision.gameObject))
             {
@@ -152,10 +156,14 @@ public class CharacterController : MonoBehaviour
             if (movement.x > 0)
             {
                 lastMoveIndicator = 1; // Right
+                sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
+                sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
             }
             else if (movement.x < 0)
             {
                 lastMoveIndicator = -1; // Left
+                sword.transform.rotation = Quaternion.Euler(0, 0, 90); // Face right when moving right
+                sword.transform.localPosition = new Vector3(-1f, 0, 0); // Adjust sword position when moving right
             }
             else
             {
@@ -173,6 +181,7 @@ public class CharacterController : MonoBehaviour
         // Reset jumping state when colliding with the ground
         jumping = false;
         dashed = false; // Reset dashed state when touching the ground
+        dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
         FindHorizontalVelocity();
     }
     public void OnJump()
@@ -189,12 +198,39 @@ public class CharacterController : MonoBehaviour
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
         }
     }
+    bool canAttack = false;
+    public void EnableAttack()
+    {
+        canAttack = true; // Enable attack action
+    }
+    public void OnAttack()
+    {
+        print("Fire action triggered");
+        if (canAttack)
+        {
+            StartCoroutine(Attack());
+        }
+    }
+    
+    IEnumerator Attack()
+    {
+        canAttack = false; // Disable attack action after performing it
+        sword.SetActive(true); // Activate the sword
+        // Implement attack logic here
+        yield return new WaitForSeconds(0.5f); // Wait for the attack animation to finish
+        sword.SetActive(false); // Deactivate the sword after the attack
+        canAttack = true; // Re-enable attack action after the cooldown
+        print("Attack performed");
+
+    }
+
     IEnumerator Dash()
     {
         if (dashed)
             yield break; // Prevent multiple dashes
         dashing = true; // Set dashing state to true
         dashed = true;
+        dashIndicator.gameObject.SetActive(false); // Hide the dash indicator
         PlayerRenderer.rotation = Quaternion.Euler(0,0, lastMoveIndicator == 1 ? -15 : 15); // Face the direction of the dash
         rb.gravityScale = 0; // Disable gravity while dashing
         rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while dashing
@@ -210,7 +246,7 @@ public class CharacterController : MonoBehaviour
     {
         if (dashCoroutine != null)
         {
-            StopAllCoroutines(); // Stop any ongoing dash or jump when entering a ladder
+            StopCoroutine(dashCoroutine); // Stop any ongoing dash or jump when entering a ladder
             dashing = false; // Reset dashing state when on a ladder
             PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation when entering a ladder
             rb.gravityScale = 1; // Re-enable gravity after dash
