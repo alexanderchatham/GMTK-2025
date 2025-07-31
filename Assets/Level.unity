@@ -1071,6 +1071,7 @@ Transform:
   - {fileID: 2065007635}
   - {fileID: 203830078}
   - {fileID: 408057480}
+  - {fileID: 2104646966}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &58468887
@@ -13972,7 +13973,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8653841859749522206, guid: b5953ee8b41dc4bb88adeea29a59c2c9, type: 3}
       propertyPath: m_LocalScale.y
-      value: 22.159668
+      value: 37.660355
       objectReference: {fileID: 0}
     - target: {fileID: 8653841859749522206, guid: b5953ee8b41dc4bb88adeea29a59c2c9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13980,7 +13981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8653841859749522206, guid: b5953ee8b41dc4bb88adeea29a59c2c9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.882
+      value: 16.632
       objectReference: {fileID: 0}
     - target: {fileID: 8653841859749522206, guid: b5953ee8b41dc4bb88adeea29a59c2c9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21820,7 +21821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: oneTimeUse
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: interactOnTouch
@@ -21832,7 +21833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -21849,7 +21850,7 @@ PrefabInstance:
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1947781701}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -21880,7 +21881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -21896,7 +21897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: 
+      value: TeleportPlayer, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -21924,7 +21925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: 
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6005548666464327620, guid: 5d6b14e706ea64a1685fc1044d9628ed, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -21972,7 +21973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 931435245}
-  teleportTarget: {fileID: 0}
+  teleportTarget: {fileID: 2104646966}
 --- !u!1 &1969414052
 GameObject:
   m_ObjectHideFlags: 0
@@ -23749,6 +23750,37 @@ Transform:
   - {fileID: 863744440}
   - {fileID: 1689574037}
   - {fileID: 928625355}
+  m_Father: {fileID: 56047332}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2104646965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2104646966}
+  m_Layer: 0
+  m_Name: Boss Portal Exit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2104646966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104646965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4628, y: 142.8379, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 56047332}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2128215731
