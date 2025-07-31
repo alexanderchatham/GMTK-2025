@@ -4,7 +4,11 @@ using UnityEngine;
 public class BasicEnemy : MonoBehaviour
 {
     public Transform player; // Reference to the player transform
-    
+    private Breakable Breakable; // Reference to the Breakable component
+    private void Start()
+    {
+        Breakable = GetComponent<Breakable>(); // Get the Breakable component attached to this enemy
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Check if the object colliding with this has the tag "Player"
@@ -23,19 +27,25 @@ public class BasicEnemy : MonoBehaviour
         // This coroutine will handle the enemy's chase behavior
         while (true)
         {
-            // Let's use the same code we are using the move the player to move the enemy in the direction of the player
-            Vector3 direction = (player.transform.position - transform.position);
-            if(direction.magnitude > 50f) // If the player is too far away, stop chasing
+            if(Breakable.KnockedBack)
+                yield return new WaitForEndOfFrame(); // Wait for the next frame
+            else
             {
-                transform.GetChild(0).gameObject.SetActive(true); // deactivate the sense object
-                yield break; // Exit the coroutine
+
+                // Let's use the same code we are using the move the player to move the enemy in the direction of the player
+                Vector3 direction = (player.transform.position - transform.position);
+                if(direction.magnitude > 50f) // If the player is too far away, stop chasing
+                {
+                    transform.GetChild(0).gameObject.SetActive(true); // deactivate the sense object
+                    yield break; // Exit the coroutine
+                }
+                direction.y = 0; // Ensure the enemy moves only in the XZ plane (2D movement)
+                float speed = 5f; // Speed of the enemy
+                float step = speed * Time.deltaTime; // Calculate the step size based on speed and time
+                // Move the enemy towards the player
+                transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
+                yield return new WaitForEndOfFrame(); // Wait for the next frame
             }
-            direction.y = 0; // Ensure the enemy moves only in the XZ plane (2D movement)
-            float speed = 5f; // Speed of the enemy
-            float step = speed * Time.deltaTime; // Calculate the step size based on speed and time
-            // Move the enemy towards the player
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
-            yield return new WaitForEndOfFrame(); // Wait for the next frame
         }
     }
 }
