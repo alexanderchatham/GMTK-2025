@@ -6,12 +6,23 @@ public class GameSettings : MonoBehaviour
     public static bool Paused { get; set; } = false;
     public static float Volume { get; set; } = 1.0f;
     public static bool GameOver { get; set; } = false;
+    public static GameSettings instance;
+    public GameObject pauseMenu;
 
-    public static void TogglePause()
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
+
+    public void TogglePause()
     {
         Paused = !Paused;
         Time.timeScale = Paused ? 0 : 1;
         Debug.Log("Game " + (Paused ? "Paused" : "Resumed"));
+        pauseMenu.SetActive(Paused);
     }
 
     public static void SetVolume(float volume)

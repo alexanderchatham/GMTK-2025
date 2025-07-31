@@ -20,7 +20,7 @@ public class GameTimer : MonoBehaviour
     }
     void Update()
     {
-        if (!GameSettings.Paused && GameSettings.GameOver)
+        if (!GameSettings.Paused && !GameSettings.GameOver)
         {
             time += Time.deltaTime;
             UpdateTimerText();

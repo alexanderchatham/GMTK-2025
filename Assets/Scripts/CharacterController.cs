@@ -35,19 +35,20 @@ public class CharacterController : MonoBehaviour
     }
     public void Update()
     {
-
+        if (GameSettings.Paused)
+            return;
         //transform.Translate(moveDirection * Time.deltaTime);
-        //Instead of translate use rb to apply movement
-        if (rb != null)
-        {
-            if (onLadder)
-                LadderControl();
-            FindHorizontalVelocity();
-        }
-        else
-        {
-            Debug.LogError("Rigidbody2D component is not assigned.");
-        }
+            //Instead of translate use rb to apply movement
+            if (rb != null)
+            {
+                if (onLadder)
+                    LadderControl();
+                FindHorizontalVelocity();
+            }
+            else
+            {
+                Debug.LogError("Rigidbody2D component is not assigned.");
+            }
 
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -149,6 +150,8 @@ public class CharacterController : MonoBehaviour
     }
     public void OnMove(InputValue value)
     {
+        if (GameSettings.Paused)
+            return;
         var movement = value.Get<Vector2>();
         if (movement != Vector2.zero)
         {
@@ -198,6 +201,11 @@ public class CharacterController : MonoBehaviour
             jumping = true;
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
         }
+    }
+    public void OnPause()
+    {
+        GameSettings.instance.TogglePause();
+        rb.linearVelocity = Vector2.zero;
     }
     bool canAttack = false;
     public void EnableAttack()
