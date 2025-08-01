@@ -206,6 +206,7 @@ public class CharacterController : MonoBehaviour
     private void LandOnGround()
     {
         // Reset jumping state when colliding with the ground
+        rb.gravityScale = 3; // Ensure gravity is enabled when landing on the ground
         jumping = false;
         dashed = false; // Reset dashed state when touching the ground
         dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
@@ -224,6 +225,7 @@ public class CharacterController : MonoBehaviour
             jumping = true;
             rb.linearVelocityY = 0; // Reset vertical velocity to prevent double jumping
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
+            rb.gravityScale = 1; // Ensure gravity is enabled when jumping
         }
     }
 
@@ -269,12 +271,25 @@ public class CharacterController : MonoBehaviour
         PlayerRenderer.rotation = Quaternion.Euler(0,0, lastMoveIndicator == 1 ? -15 : 15); // Face the direction of the dash
         rb.gravityScale = 0; // Disable gravity while dashing
         rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while dashing
-        rb.linearVelocityX = 30f * lastMoveIndicator;
+        rb.linearVelocityX = 20f * lastMoveIndicator;
         float timer = 0f; // Timer for dash duration
-        while (timer < 0.3f) // Dash duration
+        while (timer < 0.5f) // Dash duration
         {
             timer += Time.deltaTime;
             rb.linearVelocityY = 0; // Maintain horizontal velocity during dash
+            rb.linearVelocityX = 20f * lastMoveIndicator; // Maintain horizontal velocity during dash
+            // If the player is contacting a collider at a 45 degree angle translate the player up a little 
+            var contactPoint = Physics2D.OverlapCircle(transform.position, .5f, LayerMask.GetMask("Ground"));
+            if (contactPoint != null)
+            {
+                Vector2 contactNormal = contactPoint.ClosestPoint(transform.position) - (Vector2)transform.position;
+                float dotProduct = Vector2.Dot(contactNormal.normalized, Vector2.up);
+                if (dotProduct < 0.5f) // Adjust this threshold as needed
+                {
+                    // If the player is not above the ground, translate the player up a little
+                    transform.Translate(new Vector3(0, 0.3f, 0)); // Adjust this value to control the upward translation during dash
+                }
+            }
             yield return null; // Wait for the next frame
         }
         PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation after dash

@@ -897,7 +897,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -906,6 +906,72 @@ TextureImporter:
       bones: []
       spriteID: 4f48f9aac47ebfd40ba29b8c06035ba2
       internalID: 1962185272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CastleSpriteSheet_34
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 320
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38c18b7126f478c4989f50731ef38eb7
+      internalID: -1439024375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CastleSpriteSheet_35
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 320
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19fc5549fabf80045943b25b8d67e5a1
+      internalID: 1113573771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CastleSpriteSheet_36
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 320
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5fdd921487214b47ad0284a401d4c2a
+      internalID: -1225674271
       vertices: []
       indices: 
       edges: []
@@ -952,6 +1018,9 @@ TextureImporter:
       CastleSpriteSheet_31: 1621226670
       CastleSpriteSheet_32: 748028849
       CastleSpriteSheet_33: 1962185272
+      CastleSpriteSheet_34: -1439024375
+      CastleSpriteSheet_35: 1113573771
+      CastleSpriteSheet_36: -1225674271
       CastleSpriteSheet_4: 1533128995
       CastleSpriteSheet_5: 1474839478
       CastleSpriteSheet_6: 1214041984
