@@ -39,18 +39,17 @@ public class CharacterController : MonoBehaviour
     {
         if (GameSettings.Paused)
             return;
-        //transform.Translate(moveDirection * Time.deltaTime);
-            //Instead of translate use rb to apply movement
-            if (rb != null)
-            {
-                if (onLadder)
-                    LadderControl();
+        if (rb != null)
+        {
+            if (onLadder)
+                LadderControl();
+            else if (!dashing)
                 FindHorizontalVelocity();
-            }
-            else
-            {
-                Debug.LogError("Rigidbody2D component is not assigned.");
-            }
+        }
+        else
+        {
+            Debug.LogError("Rigidbody2D component is not assigned.");
+        }
 
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -176,47 +175,75 @@ public class CharacterController : MonoBehaviour
         if (movement != Vector2.zero)
         {
             // Move the character based on the input
-            moveDirection = new Vector3(movement.x * speed, movement.y, 0);
+            moveDirection = new Vector3(movement.x, movement.y, 0);
+
+            if (dashing)
+                return; // Prevent movement if dashing
             if (movement.x > 0)
             {
                 lastMoveIndicator = 1; // Right
-                sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
-                sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
             }
             else if (movement.x < 0)
             {
                 lastMoveIndicator = -1; // Left
-                sword.transform.rotation = Quaternion.Euler(0, 0, 90); // Face right when moving right
-                sword.transform.localPosition = new Vector3(-1f, 0, 0); // Adjust sword position when moving right
             }
             else
             {
                 lastMoveIndicator = 0; // No horizontal movement
-                sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
-                sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
             }
-            PlayerRenderer.GetComponent<SpriteRenderer>().flipX = lastMoveIndicator < 0; // Flip the character sprite based on movement direction
+            UpdateVisuals();
         }
         else
         {
             // Stop the character if no input is given
             moveDirection = Vector3.zero;
+            lastMoveIndicator = 0; // No horizontal movement
+            UpdateVisuals();
         }
     }
-    private void LandOnGround()
+
+    private void UpdateVisuals()
+    {
+        if (lastMoveIndicator == 1)
+        {
+            sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
+            sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
+        }
+        else if (lastMoveIndicator == -1)
+        {
+            sword.transform.rotation = Quaternion.Euler(0, 0, 90); // Face right when moving right
+            sword.transform.localPosition = new Vector3(-1f, 0, 0); // Adjust sword position when moving right
+        }
+        else
+        {
+            sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
+            sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
+        }
+        PlayerRenderer.GetComponent<SpriteRenderer>().flipX = lastMoveIndicator < 0; // Flip the character sprite based on movement direction
+    }
+
+    private void LandOnGround(bool actuallyLadder = false)
     {
         // Reset jumping state when colliding with the ground
-        rb.gravityScale = 3; // Ensure gravity is enabled when landing on the ground
         jumping = false;
         dashed = false; // Reset dashed state when touching the ground
         dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
-        FindHorizontalVelocity();
+        if (!actuallyLadder)
+        {
+            rb.gravityScale = 3; // Ensure gravity is enabled when landing on the ground
+            //FindHorizontalVelocity();
+        }
+        else
+        {
+            rb.gravityScale = 0; // Disable gravity when landing on a ladder
+            rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while on a ladder
+        }
     }
     public void OnJump()
     {
         if(jumping && dashed)
             return; // Prevent jumping if already in the air
-        else if (jumping &&!dashed)
+        else if (jumping &&!dashed&&!onLadder)
         {
             dashCoroutine = StartCoroutine(Dash()); // Start the dash coroutine
         }
@@ -297,6 +324,7 @@ public class CharacterController : MonoBehaviour
         rb.gravityScale = 1; // Re-enable gravity after dash
         dashing = false; // Reset dashing state
         dashCoroutine = null; // Clear the dash coroutine reference
+        UpdateVisuals();
     }
     private void StopDash()
     {
@@ -310,16 +338,18 @@ public class CharacterController : MonoBehaviour
     }
     private void LadderControl()
     {
-        rb.linearVelocity *= .9f; // Slow down the character's movement on the ladder
+        if (rb.linearVelocityY < 0)
+        {
+            rb.linearVelocityY = 0; // Stop downward movement on the ladder
+            LandOnGround(true);
+        }
         if (moveDirection.x < ladderStickiness && moveDirection.x > -ladderStickiness)
         {
             moveDirection.x = 0; // Stop horizontal movement on the ladder
         }
-        if (moveDirection.y != 0)
-        {
-            //use translations for ladder movement
-            transform.Translate(new Vector3(0, moveDirection.y * speed * Time.deltaTime, 0));
-        }
+        //use translations for ladder movement
+        transform.Translate(new Vector3(moveDirection.x * speed * Time.deltaTime, moveDirection.y * speed * Time.deltaTime, 0));
+        
     }
     private void FindHorizontalVelocity()
     {
@@ -327,7 +357,7 @@ public class CharacterController : MonoBehaviour
         {
             rb.linearVelocityX = 0;
         }
-        var newHorizontalVelocity = moveDirection.x + rb.linearVelocityX;
+        var newHorizontalVelocity = moveDirection.x *speed + rb.linearVelocityX;
         // put bounds on negative and positive value for max speed
         if (newHorizontalVelocity > MaxSpeed)
         {
@@ -346,6 +376,17 @@ public class CharacterController : MonoBehaviour
                 PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation when not moving
             }
             rb.linearVelocityX = newHorizontalVelocity;
+            var contactPoint = Physics2D.OverlapCircle(transform.position, .5f, LayerMask.GetMask("Ground"));
+            if (contactPoint != null)
+            {
+                Vector2 contactNormal = contactPoint.ClosestPoint(transform.position) - (Vector2)transform.position;
+                float dotProduct = Vector2.Dot(contactNormal.normalized, Vector2.up);
+                if (dotProduct < 0.5f) // Adjust this threshold as needed
+                {
+                    // If the player is not above the ground, translate the player up a little
+                    transform.Translate(new Vector3(0, 0.3f, 0)); // Adjust this value to control the upward translation during dash
+                }
+            }
         }
     }
 }

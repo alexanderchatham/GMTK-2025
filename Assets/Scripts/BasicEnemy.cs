@@ -5,6 +5,7 @@ public class BasicEnemy : MonoBehaviour
 {
     public Transform player; // Reference to the player transform
     private Breakable Breakable; // Reference to the Breakable component
+    public float speed = 3f;
     private void Start()
     {
         Breakable = GetComponent<Breakable>(); // Get the Breakable component attached to this enemy
@@ -40,7 +41,6 @@ public class BasicEnemy : MonoBehaviour
                     yield break; // Exit the coroutine
                 }
                 direction.y = 0; // Ensure the enemy moves only in the XZ plane (2D movement)
-                float speed = 5f; // Speed of the enemy
                 float step = speed * Time.deltaTime; // Calculate the step size based on speed and time
                 // Move the enemy towards the player
                 transform.position = Vector3.MoveTowards(transform.position, player.transform.position, step);
