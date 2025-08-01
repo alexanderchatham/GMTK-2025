@@ -8,6 +8,7 @@ public class GameSettings : MonoBehaviour
     public static bool GameOver { get; set; } = false;
     public static GameSettings instance;
     public GameObject pauseMenu;
+    public GameObject leaderboardMenu;
 
     void Awake()
     {
@@ -23,6 +24,7 @@ public class GameSettings : MonoBehaviour
         Time.timeScale = Paused ? 0 : 1;
         Debug.Log("Game " + (Paused ? "Paused" : "Resumed"));
         pauseMenu.SetActive(Paused);
+        leaderboardMenu.SetActive(false);
     }
 
     public static void SetVolume(float volume)
