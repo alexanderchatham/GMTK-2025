@@ -78,6 +78,10 @@ public class CharacterController : MonoBehaviour
                 currentLadders.Add(collision.gameObject); // Add the ladder to the list if not already present
             }
         }
+        if (collision.gameObject.CompareTag("Secret"))
+        {
+            collision.gameObject.SetActive(false); // Deactivate the secret object when exiting
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -103,10 +107,6 @@ public class CharacterController : MonoBehaviour
                 rb.gravityScale = 1; // Re-enable gravity when exiting the ladder
                 onLadder = false; // Set onLadder to false when exiting a ladder
             }
-        }
-        if(collision.gameObject.CompareTag("Secret"))
-        {
-            collision.gameObject.SetActive(false); // Deactivate the secret object when exiting
         }
     }
     public float dotProductThreshold = 0.5f; // Adjust this threshold as needed
