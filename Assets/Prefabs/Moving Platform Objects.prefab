@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 772532650875876749}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.24500021, y: 0, z: 0}
+  m_LocalPosition: {x: -0.24923326, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -177,7 +177,7 @@ Transform:
   m_GameObject: {fileID: 1710457729434085498}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.41166687, y: 0, z: 0}
+  m_LocalPosition: {x: -0.4159, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -264,7 +264,7 @@ Transform:
   m_GameObject: {fileID: 2082427156365546416}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.08833313, y: 0, z: 0}
+  m_LocalPosition: {x: 0.08410009, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -574,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 6201336249848078127}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.07833354, y: 0, z: 0}
+  m_LocalPosition: {x: -0.08256658, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -661,7 +661,7 @@ Transform:
   m_GameObject: {fileID: 6965370586700651817}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.42166647, y: 0, z: 0}
+  m_LocalPosition: {x: 0.41743344, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -748,7 +748,7 @@ Transform:
   m_GameObject: {fileID: 8035895993296810189}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.25499982, y: 0, z: 0}
+  m_LocalPosition: {x: 0.25076678, y: 0, z: 0}
   m_LocalScale: {x: 0.16666667, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
