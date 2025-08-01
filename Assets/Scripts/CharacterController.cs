@@ -27,6 +27,13 @@ public class CharacterController : MonoBehaviour
     Rigidbody2D rb;
     private Interactable currentInteractable;
     public GameObject sword;
+
+    public AudioSource jumpSound;
+    public AudioSource dyingSound;
+    public AudioSource dashSound;
+    public AudioSource walkingSound;
+    public AudioSource swingSound;
+    public AudioSource landingSound;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -114,6 +121,7 @@ public class CharacterController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Lava"))
         {
+            dyingSound.Play(); // Play dying sound
             StopDash();
             // Reset jumping state when colliding with the ground
             jumping = false;
@@ -179,31 +187,27 @@ public class CharacterController : MonoBehaviour
 
             if (dashing)
                 return; // Prevent movement if dashing
-            if (movement.x > 0)
-            {
-                lastMoveIndicator = 1; // Right
-            }
-            else if (movement.x < 0)
-            {
-                lastMoveIndicator = -1; // Left
-            }
-            else
-            {
-                lastMoveIndicator = 0; // No horizontal movement
-            }
+            
             UpdateVisuals();
         }
         else
         {
             // Stop the character if no input is given
             moveDirection = Vector3.zero;
-            lastMoveIndicator = 0; // No horizontal movement
             UpdateVisuals();
         }
     }
 
     private void UpdateVisuals()
     {
+        if (moveDirection.x > 0)
+        {
+            lastMoveIndicator = 1; // Right
+        }
+        else if (moveDirection.x < 0)
+        {
+            lastMoveIndicator = -1; // Left
+        }
         if (lastMoveIndicator == 1)
         {
             sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
@@ -214,22 +218,16 @@ public class CharacterController : MonoBehaviour
             sword.transform.rotation = Quaternion.Euler(0, 0, 90); // Face right when moving right
             sword.transform.localPosition = new Vector3(-1f, 0, 0); // Adjust sword position when moving right
         }
-        else
-        {
-            sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
-            sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
-        }
         PlayerRenderer.GetComponent<SpriteRenderer>().flipX = lastMoveIndicator < 0; // Flip the character sprite based on movement direction
     }
 
     private void LandOnGround(bool actuallyLadder = false)
     {
         // Reset jumping state when colliding with the ground
-        jumping = false;
-        dashed = false; // Reset dashed state when touching the ground
-        dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
         if (!actuallyLadder)
         {
+            if(jumping)
+                landingSound.Play(); // Play landing sound
             rb.gravityScale = 3; // Ensure gravity is enabled when landing on the ground
             //FindHorizontalVelocity();
         }
@@ -238,6 +236,9 @@ public class CharacterController : MonoBehaviour
             rb.gravityScale = 0; // Disable gravity when landing on a ladder
             rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while on a ladder
         }
+        jumping = false;
+        dashed = false; // Reset dashed state when touching the ground
+        dashIndicator.gameObject.SetActive(true); // Hide the dash indicator
     }
     public void OnJump()
     {
@@ -249,6 +250,7 @@ public class CharacterController : MonoBehaviour
         }
         else
         {
+            jumpSound.Play(); // Play jump sound
             jumping = true;
             rb.linearVelocityY = 0; // Reset vertical velocity to prevent double jumping
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
@@ -280,6 +282,7 @@ public class CharacterController : MonoBehaviour
     {
         canAttack = false; // Disable attack action after performing it
         sword.SetActive(true); // Activate the sword
+        swingSound.Play(); // Play attack sound
         // Implement attack logic here
         yield return new WaitForSeconds(0.5f); // Wait for the attack animation to finish
         sword.SetActive(false); // Deactivate the sword after the attack
@@ -292,6 +295,7 @@ public class CharacterController : MonoBehaviour
     {
         if (dashed)
             yield break; // Prevent multiple dashes
+        dashSound.Play(); // Play dash sound
         dashing = true; // Set dashing state to true
         dashed = true;
         dashIndicator.gameObject.SetActive(false); // Hide the dash indicator
@@ -374,6 +378,11 @@ public class CharacterController : MonoBehaviour
             else
             {
                 PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation when not moving
+
+                if (walkingSound.isPlaying)
+                {
+                    walkingSound.Stop(); // Stop walking sound when not moving
+                }
             }
             rb.linearVelocityX = newHorizontalVelocity;
             var contactPoint = Physics2D.OverlapCircle(transform.position, .5f, LayerMask.GetMask("Ground"));
