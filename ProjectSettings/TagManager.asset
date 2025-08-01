@@ -12,6 +12,7 @@ TagManager:
   - MovingPlatform
   - Sword
   - Light
+  - Secret
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - Enemy
   - LadderInner
   - Lights
-  - 
+  - Camera
   - 
   - 
   - 

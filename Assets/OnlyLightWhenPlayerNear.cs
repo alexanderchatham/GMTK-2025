@@ -1,16 +1,22 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class OnlyLightWhenPlayerNear : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        if (collision.gameObject.CompareTag("Light"))
+        {
+            collision.gameObject.GetComponentInChildren<Light2D>().enabled = true; // Disable light when exiting the trigger
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        
+        if (collision.gameObject.CompareTag("Light"))
+        {
+            collision.gameObject.GetComponentInChildren<Light2D>().enabled = false; // Disable light when exiting the triggerFV
+        }
     }
 }

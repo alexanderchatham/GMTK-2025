@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 8648329164075592695}
   - component: {fileID: 2554769554457609894}
   m_Layer: 0
-  m_Name: Ladder
+  m_Name: LadderInner
   m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -263,7 +263,7 @@ MonoBehaviour:
     m_TrimEdge: 0
     m_FlipX: 0
     m_FlipY: 0
-    m_InitialTrim: 0.07
+    m_InitialTrim: 0
   m_CastingOption: 2
   m_PreviousTrimEdge: 0
   m_PreviousEdgeProcessing: 1
@@ -418,7 +418,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5352641, y: 16.493467, z: 1}
+  m_LocalScale: {x: 1.5, y: 16, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3227239937539216727}
@@ -551,7 +551,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 5
 --- !u!1 &4777856852149608884
 GameObject:
   m_ObjectHideFlags: 0

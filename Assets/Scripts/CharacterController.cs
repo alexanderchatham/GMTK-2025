@@ -78,10 +78,6 @@ public class CharacterController : MonoBehaviour
                 currentLadders.Add(collision.gameObject); // Add the ladder to the list if not already present
             }
         }
-        if (collision.gameObject.CompareTag("Light"))
-        {
-            collision.gameObject.GetComponentInChildren<Light2D>().enabled = true; // Disable light when exiting the trigger
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -108,13 +104,34 @@ public class CharacterController : MonoBehaviour
                 onLadder = false; // Set onLadder to false when exiting a ladder
             }
         }
-        if (collision.gameObject.CompareTag("Light"))
+        if(collision.gameObject.CompareTag("Secret"))
         {
-            collision.gameObject.GetComponentInChildren<Light2D>().enabled = false; // Disable light when exiting the triggerFV
+            collision.gameObject.SetActive(false); // Deactivate the secret object when exiting
         }
     }
+    public float dotProductThreshold = 0.5f; // Adjust this threshold as needed
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
+        if (collision.gameObject.CompareTag("Lava"))
+        {
+            StopDash();
+            // Reset jumping state when colliding with the ground
+            jumping = false;
+            dashed = false; // Reset dashed state when touching the ground
+            transform.position = spawnPoint.transform.position; // Reset position to spawn point
+        }
+
+        //see if player is above the ground or moving platform with dot product. if not return
+        Vector2 contactPoint = collision.GetContact(0).point;
+        Vector2 contactNormal = collision.GetContact(0).normal;
+        Vector2 playerToContact = contactPoint - (Vector2)transform.position;
+        float dotProduct = Vector2.Dot(playerToContact.normalized, contactNormal.normalized);
+        if (dotProduct > dotProductThreshold) // Adjust this threshold as needed
+        {
+            print("Player is not above the ground or moving platform, dot product: " + dotProduct);
+            return; // Player is not above the ground or moving platform
+        }
         if (collision.gameObject.CompareTag("Ground"))
         {
             LandOnGround();
@@ -124,14 +141,6 @@ public class CharacterController : MonoBehaviour
             // Attach to the moving platform
             transform.SetParent(collision.transform);
             LandOnGround();
-        }
-        if (collision.gameObject.CompareTag("Lava"))
-        {
-            StopDash();
-            // Reset jumping state when colliding with the ground
-            jumping = false;
-            dashed = false; // Reset dashed state when touching the ground
-            transform.position = spawnPoint.transform.position; // Reset position to spawn point
         }
     }
     void OnCollisionStay(Collision collision)
