@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -77,6 +78,7 @@ public class CharacterController : MonoBehaviour
             }
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Interactable"))
@@ -172,7 +174,10 @@ public class CharacterController : MonoBehaviour
             else
             {
                 lastMoveIndicator = 0; // No horizontal movement
+                sword.transform.rotation = Quaternion.Euler(0, 0, -90); // Face right when moving right
+                sword.transform.localPosition = new Vector3(1f, 0, 0); // Adjust sword position when moving right
             }
+            PlayerRenderer.GetComponent<SpriteRenderer>().flipX = lastMoveIndicator < 0; // Flip the character sprite based on movement direction
         }
         else
         {
@@ -199,9 +204,12 @@ public class CharacterController : MonoBehaviour
         else
         {
             jumping = true;
+            rb.linearVelocityY = 0; // Reset vertical velocity to prevent double jumping
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
         }
     }
+
+
     public void OnPause()
     {
         GameSettings.instance.TogglePause();
@@ -244,7 +252,13 @@ public class CharacterController : MonoBehaviour
         rb.gravityScale = 0; // Disable gravity while dashing
         rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while dashing
         rb.linearVelocityX = 30f * lastMoveIndicator;
-        yield return new WaitForSeconds(0.3f); // Dash duration
+        float timer = 0f; // Timer for dash duration
+        while (timer < 0.3f) // Dash duration
+        {
+            timer += Time.deltaTime;
+            rb.linearVelocityY = 0; // Maintain horizontal velocity during dash
+            yield return null; // Wait for the next frame
+        }
         PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation after dash
         rb.linearVelocityX = rb.linearVelocityX * 0.5f; // Reduce speed after dash
         rb.gravityScale = 1; // Re-enable gravity after dash
@@ -263,7 +277,8 @@ public class CharacterController : MonoBehaviour
     }
     private void LadderControl()
     {
-        if(moveDirection.x < ladderStickiness && moveDirection.x > -ladderStickiness)
+        rb.linearVelocity *= .9f; // Slow down the character's movement on the ladder
+        if (moveDirection.x < ladderStickiness && moveDirection.x > -ladderStickiness)
         {
             moveDirection.x = 0; // Stop horizontal movement on the ladder
         }

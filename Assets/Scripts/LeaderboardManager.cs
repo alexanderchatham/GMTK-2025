@@ -80,8 +80,11 @@ public class LeaderboardManager : MonoBehaviour
         
         foreach (var response in scoresResponse.Results)
             {
-                var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
-                lb.GetComponent<LeaderboardPrefab>().SetPrefab(response.Score.ToString("00:00"), response.PlayerName, (response.Rank+1).ToString());
+            float time = (float)response.Score;
+            int minutes = Mathf.FloorToInt(time / 60);
+            int seconds = Mathf.FloorToInt(time % 60);
+            var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
+                lb.GetComponent<LeaderboardPrefab>().SetPrefab(string.Format("{0:00}:{1:00}", minutes, seconds), response.PlayerName, (response.Rank+1).ToString());
             }
     }
 
@@ -93,7 +96,10 @@ public class LeaderboardManager : MonoBehaviour
             var scoreResponse =
                 await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
             Debug.Log(JsonConvert.SerializeObject(scoreResponse));
-            PlayerLeaderboardReference.SetPrefab(scoreResponse.Score.ToString("00:00"), scoreResponse.PlayerName, (scoreResponse.Rank+1).ToString());
+            float time = (float)scoreResponse.Score;
+            int minutes = Mathf.FloorToInt(time / 60);
+            int seconds = Mathf.FloorToInt(time % 60);
+            PlayerLeaderboardReference.SetPrefab(string.Format("{0:00}:{1:00}", minutes, seconds), scoreResponse.PlayerName, (scoreResponse.Rank+1).ToString());
         }
         catch
         {

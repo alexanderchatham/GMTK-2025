@@ -40,5 +40,8 @@ public class GameSettings : MonoBehaviour
     {
         //Reload current scene or reset game state
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1; // Ensure time scale is reset
+        Paused = false;
+        GameOver = false;
     }
 }
