@@ -62,10 +62,14 @@ public class LeaderboardManager : MonoBehaviour
             Destroy(LeaderboardContainer.GetChild(i-1).gameObject);
         
         foreach (var response in scoresResponse.Results)
-            {
-                var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
-                lb.GetComponent<LeaderboardPrefab>().SetPrefab(response.Score.ToString("00:00"), response.PlayerName, (response.Rank+1).ToString());
-            }
+        {
+            float time = (float)response.Score;
+            int minutes = Mathf.FloorToInt(time / 60);
+            int seconds = Mathf.FloorToInt(time % 60);
+            var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
+            lb.GetComponent<LeaderboardPrefab>().SetPrefab(string.Format("{0:00}:{1:00}", minutes, seconds), response.PlayerName, (response.Rank + 1).ToString());
+        }
+    
     }
 
     public async void GetPaginatedScores()
@@ -79,13 +83,13 @@ public class LeaderboardManager : MonoBehaviour
             Destroy(LeaderboardContainer.GetChild(i-1).gameObject);
         
         foreach (var response in scoresResponse.Results)
-            {
-            float time = (float)response.Score;
-            int minutes = Mathf.FloorToInt(time / 60);
-            int seconds = Mathf.FloorToInt(time % 60);
-            var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
-                lb.GetComponent<LeaderboardPrefab>().SetPrefab(string.Format("{0:00}:{1:00}", minutes, seconds), response.PlayerName, (response.Rank+1).ToString());
-            }
+        {
+        float time = (float)response.Score;
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        var lb = Instantiate(LeaderboardPrefab, LeaderboardContainer);
+            lb.GetComponent<LeaderboardPrefab>().SetPrefab(string.Format("{0:00}:{1:00}", minutes, seconds), response.PlayerName, (response.Rank+1).ToString());
+        }
     }
 
     public async void GetPlayerScore()

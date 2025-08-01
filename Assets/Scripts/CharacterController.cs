@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
@@ -77,6 +78,10 @@ public class CharacterController : MonoBehaviour
                 currentLadders.Add(collision.gameObject); // Add the ladder to the list if not already present
             }
         }
+        if (collision.gameObject.CompareTag("Light"))
+        {
+            collision.gameObject.GetComponentInChildren<Light2D>().enabled = true; // Disable light when exiting the trigger
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -102,6 +107,10 @@ public class CharacterController : MonoBehaviour
                 rb.gravityScale = 1; // Re-enable gravity when exiting the ladder
                 onLadder = false; // Set onLadder to false when exiting a ladder
             }
+        }
+        if (collision.gameObject.CompareTag("Light"))
+        {
+            collision.gameObject.GetComponentInChildren<Light2D>().enabled = false; // Disable light when exiting the triggerFV
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
