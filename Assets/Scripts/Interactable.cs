@@ -40,9 +40,14 @@ public class Interactable : MonoBehaviour
             Destroy(this);
         }
         var anim = GetComponent<Animator>();
+        var audio = GetComponent<AudioSource>();
         if(anim != null)
         {
             anim.SetTrigger("switch");
+        }
+        if(audio != null)
+        {
+            audio.Play();
         }
     }
 }

@@ -29,6 +29,8 @@ public class CharacterController : MonoBehaviour
     Rigidbody2D rb;
     private Interactable currentInteractable;
     public GameObject sword;
+    public ParticleSystem landingEffect;
+    public ParticleSystem dashEffect;
 
     public AudioSource jumpSound;
     public AudioSource dyingSound;
@@ -229,7 +231,7 @@ public class CharacterController : MonoBehaviour
         if (!actuallyLadder)
         {
             GetComponentInChildren<Animator>().SetBool("InAir", false); // Set the moving animation to true when moving
-
+            landingEffect.Play();
             onGround = true; // Set onGround to true when landing on the ground
             if(moveDirection.x != 0)
                 GetComponentInChildren<Animator>().SetBool("Moving",true); // Set the moving animation to true when landing on the ground
@@ -324,10 +326,14 @@ public class CharacterController : MonoBehaviour
         if (dashed)
             yield break; // Prevent multiple dashes
         dashSound.Play(); // Play dash sound
+        GetComponentInChildren<Animator>().SetBool("Dashing", true); // Set the moving animation to true when moving
+        dashEffect.Play(); // Play dash effect
+        GetComponent<TrailRenderer>().enabled = true; // Enable the trail renderer for dash effect
+        GetComponent<TrailRenderer>().time = 3f;
         dashing = true; // Set dashing state to true
         dashed = true;
         dashIndicator.gameObject.SetActive(false); // Hide the dash indicator
-        PlayerRenderer.rotation = Quaternion.Euler(0,0, lastMoveIndicator == 1 ? -15 : 15); // Face the direction of the dash
+        PlayerRenderer.rotation = Quaternion.Euler(0,0, lastMoveIndicator == 1 ? -45 : 45); // Face the direction of the dash
         rb.gravityScale = 0; // Disable gravity while dashing
         rb.linearVelocityY = 0; // Reset vertical velocity to prevent jumping while dashing
         rb.linearVelocityX = 20f * lastMoveIndicator;
@@ -356,6 +362,11 @@ public class CharacterController : MonoBehaviour
         rb.gravityScale = 1; // Re-enable gravity after dash
         dashing = false; // Reset dashing state
         dashCoroutine = null; // Clear the dash coroutine reference
+        GetComponentInChildren<Animator>().SetBool("Dashing", false); // Set the moving animation to true when moving
+
+        GetComponent<TrailRenderer>().time = 0f;
+        GetComponent<TrailRenderer>().Clear();
+        GetComponent<TrailRenderer>().enabled = false;
         UpdateVisuals();
     }
     private void StopDash()
@@ -366,6 +377,11 @@ public class CharacterController : MonoBehaviour
             dashing = false; // Reset dashing state when on a ladder
             PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation when entering a ladder
             rb.gravityScale = 1; // Re-enable gravity after dash
+            GetComponentInChildren<Animator>().SetBool("Dashing", false); // Set the moving animation to true when moving
+
+            GetComponent<TrailRenderer>().time = 0f;
+            GetComponent<TrailRenderer>().Clear();
+            GetComponent<TrailRenderer>().enabled = false;
         }
     }
     private void LadderControl()

@@ -1253,6 +1253,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: CastleSpriteSheet_49
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c86a5c238ad4d154abf6c22b67343d77
+      internalID: -1801244560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CastleSpriteSheet_50
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 320
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91bc2c2bcbefe2240971c1b37da53110
+      internalID: -42380826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1311,7 +1355,9 @@ TextureImporter:
       CastleSpriteSheet_46: 712154258
       CastleSpriteSheet_47: 1643834233
       CastleSpriteSheet_48: -1160240848
+      CastleSpriteSheet_49: -1801244560
       CastleSpriteSheet_5: 1474839478
+      CastleSpriteSheet_50: -42380826
       CastleSpriteSheet_6: 1214041984
       CastleSpriteSheet_7: -180101474
       CastleSpriteSheet_8: -763365750
