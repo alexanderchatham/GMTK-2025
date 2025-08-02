@@ -25,6 +25,7 @@ public class BasicEnemy : MonoBehaviour
     }
     IEnumerator ChasePlayer()
     {
+        GetComponent<Animator>().SetBool("Move", true); // Set the animator to moving state
         // This coroutine will handle the enemy's chase behavior
         while (true)
         {
@@ -32,11 +33,21 @@ public class BasicEnemy : MonoBehaviour
                 yield return new WaitForEndOfFrame(); // Wait for the next frame
             else
             {
-
+                // If the player is to the left of the enemy, flip the enemy to face the player
+                if (player.transform.position.x < transform.position.x)
+                {
+                    GetComponent<SpriteRenderer>().flipX = true; // Flip the sprite to face left
+                }
+                else
+                {
+                    GetComponent<SpriteRenderer>().flipX = false; // Flip the sprite to face right
+                }
                 // Let's use the same code we are using the move the player to move the enemy in the direction of the player
                 Vector3 direction = (player.transform.position - transform.position);
                 if(direction.magnitude > 50f) // If the player is too far away, stop chasing
                 {
+                    GetComponent<Animator>().SetBool("Move", false); // Set the animator to moving state
+                    GetComponent<Breakable>().breakable = false;
                     transform.GetChild(0).gameObject.SetActive(true); // deactivate the sense object
                     yield break; // Exit the coroutine
                 }

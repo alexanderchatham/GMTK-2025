@@ -75,6 +75,7 @@ public class CharacterController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Ladder"))
         {
+
             StopDash();
             rb.linearVelocity = Vector2.zero; // Stop the character when entering a ladder
             rb.gravityScale = 0; // Disable gravity while on the ladder
@@ -87,6 +88,8 @@ public class CharacterController : MonoBehaviour
             {
                 currentLadders.Add(collision.gameObject); // Add the ladder to the list if not already present
             }
+            GetComponentInChildren<Animator>().SetBool("Climbing", true); // Set the moving animation to false when not moving
+
         }
         if (collision.gameObject.CompareTag("Secret"))
         {
@@ -116,6 +119,7 @@ public class CharacterController : MonoBehaviour
             {
                 rb.gravityScale = 1; // Re-enable gravity when exiting the ladder
                 onLadder = false; // Set onLadder to false when exiting a ladder
+                GetComponentInChildren<Animator>().SetBool("Climbing", false); // Set the moving animation to false when not moving
             }
         }
     }
