@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -18,6 +19,7 @@ public class CharacterController : MonoBehaviour
     public bool dashed = false;
     public bool dashing = false;
     public bool onLadder = false; // Added for ladder functionality
+    public bool onGround = false; // Added for ground detection
     Coroutine dashCoroutine;
     public Transform PlayerRenderer;
     public Image dashIndicator; // Assuming you have a UI Image for dash indicator
@@ -226,7 +228,14 @@ public class CharacterController : MonoBehaviour
         // Reset jumping state when colliding with the ground
         if (!actuallyLadder)
         {
-            if(jumping)
+            GetComponentInChildren<Animator>().SetBool("InAir", false); // Set the moving animation to true when moving
+
+            onGround = true; // Set onGround to true when landing on the ground
+            if(moveDirection.x != 0)
+                GetComponentInChildren<Animator>().SetBool("Moving",true); // Set the moving animation to true when landing on the ground
+            else
+                GetComponentInChildren<Animator>().SetBool("Moving", false); // Set the moving animation to false when not moving
+            if (jumping)
                 landingSound.Play(); // Play landing sound
             rb.gravityScale = 3; // Ensure gravity is enabled when landing on the ground
             //FindHorizontalVelocity();
@@ -250,6 +259,8 @@ public class CharacterController : MonoBehaviour
         }
         else
         {
+            GetComponentInChildren<Animator>().SetBool("InAir", true); // Set the moving animation to true when moving
+
             jumpSound.Play(); // Play jump sound
             jumping = true;
             rb.linearVelocityY = 0; // Reset vertical velocity to prevent double jumping
@@ -277,7 +288,24 @@ public class CharacterController : MonoBehaviour
             StartCoroutine(Attack());
         }
     }
-    
+    public ScrollRect leaderboardScrollView; // Assuming you have a ScrollView for scrolling actions
+    public void OnScroll(InputValue value)
+    {
+        //scroll the leaderboard based on the input
+        if (GameSettings.Paused)
+            return;
+        var scrollDelta = value.Get<Vector2>();
+        if (leaderboardScrollView != null)
+        {
+            // Adjust the scroll position based on the input
+            leaderboardScrollView.verticalNormalizedPosition += scrollDelta.y * 0.1f; // Adjust the multiplier as needed
+            leaderboardScrollView.horizontalNormalizedPosition += scrollDelta.x * 0.1f; // Adjust the multiplier as needed
+        }
+        else
+        {
+            Debug.LogWarning("Leaderboard ScrollView is not assigned.");
+        }
+    }
     IEnumerator Attack()
     {
         canAttack = false; // Disable attack action after performing it
@@ -374,15 +402,17 @@ public class CharacterController : MonoBehaviour
         if (!dashing)
         {
             if(newHorizontalVelocity!= 0)
+            {
                 PlayerRenderer.rotation = Quaternion.Euler(0, 0, lastMoveIndicator == 1 ? -5 : 5); // Face the direction of the dash
+                if(onGround)
+                    GetComponentInChildren<Animator>().SetBool("Moving", true); // Set the moving animation to true when moving
+
+            }
             else
             {
                 PlayerRenderer.rotation = Quaternion.Euler(0, 0, 0); // Reset rotation when not moving
+                GetComponentInChildren<Animator>().SetBool("Moving", false); // Set the moving animation to true when moving
 
-                if (walkingSound.isPlaying)
-                {
-                    walkingSound.Stop(); // Stop walking sound when not moving
-                }
             }
             rb.linearVelocityX = newHorizontalVelocity;
             var contactPoint = Physics2D.OverlapCircle(transform.position, .5f, LayerMask.GetMask("Ground"));

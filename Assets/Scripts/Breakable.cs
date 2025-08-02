@@ -37,7 +37,10 @@ public class Breakable : MonoBehaviour
             }
         }
     }
-
+    public void SpecialBreak()
+    {
+        StartCoroutine(BreakAway(transform.position+Vector3.left*3+Vector3.down*3)); // Call the BreakAway coroutine to handle the break effect
+    }
     private void Break(Collider2D collision)
     {
         Destroy(GetComponent<Rigidbody2D>()); // Set the Rigidbody to kinematic to prevent further physics interactions

@@ -39,5 +39,10 @@ public class Interactable : MonoBehaviour
         {
             Destroy(this);
         }
+        var anim = GetComponent<Animator>();
+        if(anim != null)
+        {
+            anim.SetTrigger("switch");
+        }
     }
 }
