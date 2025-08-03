@@ -185,7 +185,7 @@ public class CharacterController : MonoBehaviour
     }
     public void OnMove(InputValue value)
     {
-        if (GameSettings.Paused)
+        if (GameSettings.Paused || !GameTimer.Instance.isRunning)
             return;
         var movement = value.Get<Vector2>();
         if (movement != Vector2.zero)
@@ -257,7 +257,11 @@ public class CharacterController : MonoBehaviour
     }
     public void OnJump()
     {
-        if(jumping && dashed)
+        if(!GameTimer.Instance.isRunning)
+            StartingScreen.Instance.OnJump(); // Start the game if not already started
+        if (GameSettings.Paused)
+            return;
+        if (jumping && dashed)
             return; // Prevent jumping if already in the air
         else if (jumping &&!dashed&&!onLadder)
         {

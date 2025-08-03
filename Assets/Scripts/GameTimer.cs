@@ -6,6 +6,7 @@ public class GameTimer : MonoBehaviour
     public static GameTimer Instance { get; private set; }
     public float time;
     public TextMeshProUGUI timerText;
+    public bool isRunning = false;
 
     void Awake()
     {
@@ -20,6 +21,10 @@ public class GameTimer : MonoBehaviour
     }
     void Update()
     {
+        if (!isRunning)
+        {
+            return; // Exit if the timer is not running
+        }
         if (!GameSettings.Paused && !GameSettings.GameOver)
         {
             time += Time.deltaTime;
