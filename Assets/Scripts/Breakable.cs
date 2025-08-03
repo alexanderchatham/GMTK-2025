@@ -22,7 +22,16 @@ public class Breakable : MonoBehaviour
             health--; // Decrease health by 1 when hit by the sword
             if (health <= 0) // If health is less than or equal to 0, break the object
             {
+                if(enemy)
                 Break(collision);
+                else if(breakable && transform.childCount>0)
+                {
+                    BreakAwayChildren(); // Call the BreakAwayChildren method to break away all children
+                }
+                else
+                {
+                    Break(collision); // Call the Break method to handle the break effect
+                }
             }
             else
             {
@@ -41,12 +50,34 @@ public class Breakable : MonoBehaviour
     {
         StartCoroutine(BreakAway(transform.position+Vector3.left*3+Vector3.down*3)); // Call the BreakAway coroutine to handle the break effect
     }
+    public void BreakFromParent(Vector3 position)
+    {
+        StartCoroutine(BreakAway(position)); // Call the BreakAway coroutine to handle the break effect from a specific position
+    }
     private void Break(Collider2D collision)
     {
         Destroy(GetComponent<Rigidbody2D>()); // Set the Rigidbody to kinematic to prevent further physics interactions
         Destroy(GetComponent<Collider2D>()); // Destroy the collider to prevent further collisions
         StartCoroutine(BreakAway(collision.transform.position));
         BreakEvent?.Invoke(); // Invoke the break event if there are any listeners
+    }
+    public void BreakAwayChildren()
+    {
+        Destroy(GetComponent<Rigidbody2D>()); // Set the Rigidbody to kinematic to prevent further physics interactions
+        Destroy(GetComponent<Collider2D>()); // Destroy the collider to prevent further collisions
+        //break away all of the children of this transform
+        foreach (Transform child in transform)
+        {
+            if (child.TryGetComponent<Breakable>(out Breakable breakableChild))
+            {
+                breakableChild.BreakFromParent(transform.position); // Call the SpecialBreak method on each child
+            }
+            else
+            {
+                Debug.LogWarning("Child does not have a Breakable component: " + child.name);
+            }
+        }
+        Destroy(gameObject,explodeTime+.5f); // Destroy the parent breakable object after breaking away its children
     }
 
     IEnumerator BreakAway(Vector3 explosionPosition)
